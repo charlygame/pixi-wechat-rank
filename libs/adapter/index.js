@@ -1,56 +1,54 @@
-import * as _window from './window'
-import HTMLElement from './HTMLElement'
+import {canvas, Canvas} from './canvas'
+import Image from './image'
+import document from './document'
+import navigator from './navigator'
+import TouchEvent from './touch-event'
+import {Element, HTMLCanvasElement, HTMLImageElement, HTMLVideoElement} from './element'
+import location from './location'
+import localStorage from './localStorage'
+import {noop} from './util'
+import XMLHttpRequest from './XMLHttpRequest'
 
-const global = GameGlobal
+const {platform} = wx.getSystemInfoSync()
 
-function inject () {
-  _window.addEventListener = (type, listener) => {
-    _window.document.addEventListener(type, listener)
-  }
-  _window.removeEventListener = (type, listener) => {
-    _window.document.removeEventListener(type, listener)
-  }
 
-  if (_window.canvas) {
-    _window.canvas.addEventListener = _window.addEventListener
-    _window.canvas.removeEventListener = _window.removeEventListener
-  }
+GameGlobal.canvas = canvas
+canvas.addEventListener = document.addEventListener
+canvas.removeEventListener = document.removeEventListener
 
-  const { platform } = wx.getSystemInfoSync()
+if (platform === 'devtools') {
+  Object.defineProperties(window, {
+    TouchEvent: {value: TouchEvent},
+    Image: {value: Image},
+    ontouchstart: {value: noop},
+    addEventListener: {value: noop},
+    localStorage: {value: localStorage},
+    HTMLImageElement: {value: HTMLImageElement},
+    HTMLCanvasElement: {value: HTMLCanvasElement},
+    HTMLVideoElement: {value: HTMLVideoElement},
+    XMLHttpRequest: {value: XMLHttpRequest},
+    Element: {value: Element}
+  })
 
-  // 开发者工具无法重定义 window
-  if (platform === 'devtools') {
-    for (const key in _window) {
-      const descriptor = Object.getOwnPropertyDescriptor(global, key)
-
-      if (!descriptor || descriptor.configurable === true) {
-        Object.defineProperty(window, key, {
-          value: _window[key]
-        })
-      }
+  for (const key in document) {
+    const desc = Object.getOwnPropertyDescriptor(window.document, key)
+    if (!desc || desc.configurable) {
+      Object.defineProperty(window.document, key, {value: document[key]})
     }
-
-    for (const key in _window.document) {
-      const descriptor = Object.getOwnPropertyDescriptor(global.document, key)
-
-      if (!descriptor || descriptor.configurable === true) {
-        Object.defineProperty(global.document, key, {
-          value: _window.document[key]
-        })
-      }
-    }
-    window.parent = window
-  } else {
-    for (const key in _window) {
-      global[key] = _window[key]
-    }
-    global.window = _window
-    window = global
-    window.top = window.parent = window
   }
-}
+} else {
+  GameGlobal.TouchEvent = TouchEvent
+  GameGlobal.Image = Image
+  GameGlobal.ontouchstart = noop
+  GameGlobal.navigator = navigator
+  GameGlobal.document = document
+  GameGlobal.addEventListener = noop
+  GameGlobal.location = location
+  GameGlobal.localStorage = localStorage
+  GameGlobal.HTMLImageElement = HTMLImageElement
+  GameGlobal.HTMLCanvasElement = HTMLCanvasElement
+  GameGlobal.HTMLVideoElement = HTMLVideoElement
+  GameGlobal.XMLHttpRequest = XMLHttpRequest
+  GameGlobal.window = GameGlobal
 
-if (!GameGlobal.__isAdapterInjected) {
-  GameGlobal.__isAdapterInjected = true
-  inject()
 }

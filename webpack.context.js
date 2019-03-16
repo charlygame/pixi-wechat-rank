@@ -4,11 +4,11 @@ const webpack = require('webpack');
 module.exports = {
     entry: [
         './libs/adapter/index.js',
-        './src/app.js' 
+        './src/context/index.js' 
     ],
     output: {
-        path: path.resolve('dist'),
-        filename: 'game.js'
+        path: path.resolve('dist/openDataContext'),
+        filename: 'index.js'
     },
     devtool: 'source-map',
     stats: 'errors-only',

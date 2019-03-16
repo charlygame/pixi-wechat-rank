@@ -1,10 +1,28 @@
-import Node from './Node'
+export class Element {
+  style = {cursor: null}
 
-export default class ELement extends Node {
-  className = ''
-  children = []
+  appendChild() {
 
-  constructor() {
-    super()
+  }
+
+  addEventListener() {
+
+  }
+
+  removeEventListener() {
+
   }
 }
+
+export class HTMLCanvasElement extends Element {
+
+}
+
+export class HTMLImageElement extends Element {
+
+}
+
+export class HTMLVideoElement extends Element {
+
+}
+

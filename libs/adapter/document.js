@@ -1,120 +1,42 @@
-import * as window from './window'
-import HTMLElement from './HTMLElement'
-import Image from './Image'
-import Audio from './Audio'
-import Canvas from './Canvas'
-import './EventIniter/'
+import {Canvas} from './canvas'
+import Image from './image'
+import {Element} from './element'
 
-const events = {}
+const stack = {}
 
-const document = {
-  readyState: 'complete',
-  visibilityState: 'visible',
-  documentElement: window,
-  hidden: false,
-  style: {},
-  location: window.location,
-  ontouchstart: null,
-  ontouchmove: null,
-  ontouchend: null,
+export default {
+  body: new Element('body'),
 
-  head: new HTMLElement('head'),
-  body: new HTMLElement('body'),
-
-  createElement(tagName) {
-    if (tagName === 'canvas') {
-      return new Canvas()
-    } else if (tagName === 'audio') {
-      return new Audio()
-    } else if (tagName === 'img') {
-      return new Image()
-    }
-
-    return new HTMLElement(tagName)
+  addEventListener(type, handle) {
+    stack[type] = stack[type] || []
+    stack[type].push(handle)
   },
 
-  getElementById(id) {
-    if (id === window.canvas.id) {
-      return window.canvas
+  removeEventListener(type, handle) {
+    if (stack[type] && stack[type].length) {
+      const i = stack[type].indexOf(handle)
+      i !== -1 && stack[type].splice(i)
     }
-    return null
   },
 
-  getElementsByTagName(tagName) {
-    if (tagName === 'head') {
-      return [document.head]
-    } else if (tagName === 'body') {
-      return [document.body]
-    } else if (tagName === 'canvas') {
-      return [window.canvas]
-    }
-    return []
+  dispatch(ev) {
+    const queue = stack[ev.type]
+    queue && queue.forEach(handle => handle(ev))
   },
 
-  getElementsByName(tagName) {
-    if (tagName === 'head') {
-      return [document.head]
-    } else if (tagName === 'body') {
-      return [document.body]
-    } else if (tagName === 'canvas') {
-      return [window.canvas]
-    }
-    return []
-  },
-
-  querySelector(query) {
-    if (query === 'head') {
-      return document.head
-    } else if (query === 'body') {
-      return document.body
-    } else if (query === 'canvas') {
-      return window.canvas
-    } else if (query === `#${window.canvas.id}`) {
-      return window.canvas
-    }
-    return null
-  },
-
-  querySelectorAll(query) {
-    if (query === 'head') {
-      return [document.head]
-    } else if (query === 'body') {
-      return [document.body]
-    } else if (query === 'canvas') {
-      return [window.canvas]
-    }
-    return []
-  },
-
-  addEventListener(type, listener) {
-    if (!events[type]) {
-      events[type] = []
-    }
-    events[type].push(listener)
-  },
-
-  removeEventListener(type, listener) {
-    const listeners = events[type]
-
-    if (listeners && listeners.length > 0) {
-      for (let i = listeners.length; i--; i > 0) {
-        if (listeners[i] === listener) {
-          listeners.splice(i, 1)
-          break
-        }
+  createElement(tag) {
+    switch (tag) {
+      case 'canvas': {
+        return new Canvas()
       }
-    }
-  },
 
-  dispatchEvent(event) {
-    const listeners = events[event.type]
+      case 'img': {
+        return new Image()
+      }
 
-    if (listeners) {
-      for (let i = 0; i < listeners.length; i++) {
-        listeners[i](event)
+      default: {
+        return new Element()
       }
     }
   }
 }
-
-export default document

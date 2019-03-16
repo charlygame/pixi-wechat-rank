@@ -142,4 +142,8 @@ export default class XMLHttpRequest {
     myHeader[header] = value
     _requestHeader.set(this, myHeader)
   }
+
+  addEventListener(ev, cb) {
+    this[`on${ev}`] =cb;
+  }
 }

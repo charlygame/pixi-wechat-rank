@@ -1,7 +1,4 @@
-const location = {
-  href: 'game.js',
-  reload() {
-  }
+export default {
+  origin: '',
+  href: ''
 }
-
-export default location

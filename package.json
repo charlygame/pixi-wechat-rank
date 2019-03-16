@@ -5,7 +5,10 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dist": "webpack"
+    "build": "webpack -p --config webpack.config.js",
+    "dev": "webpack -w --config webpack.config.js",
+    "dev:context": "webpack -w --config webpack.context.js",
+    "build:context": "webpack -p --config webpack.context.js"
   },
   "keywords": [
     "wechat",
@@ -20,8 +23,8 @@
     "@babel/plugin-syntax-dynamic-import": "^7.2.0",
     "@babel/preset-env": "^7.3.4",
     "babel-loader": "^8.0.5",
-    "pixi.js": "^5.0.0-rc.2",
     "webpack": "^4.29.6",
-    "webpack-cli": "^3.2.3"
+    "webpack-cli": "^3.2.3",
+    "pixi.js": "^4.8.5"
   }
 }

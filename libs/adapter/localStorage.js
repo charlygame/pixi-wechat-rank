@@ -1,31 +1,13 @@
-const localStorage = {
-  get length() {
-    const { keys } = wx.getStorageInfoSync()
-
-    return keys.length
-  },
-
-  key(n) {
-    const { keys } = wx.getStorageInfoSync()
-
-    return keys[n]
-  },
-
+export default {
   getItem(key) {
     return wx.getStorageSync(key)
   },
 
-  setItem(key, value) {
-    return wx.setStorageSync(key, value)
-  },
-
-  removeItem(key) {
-    wx.removeStorageSync(key)
+  setItem(key, val) {
+    return wx.setStorageSync(key, val)
   },
 
   clear() {
     wx.clearStorageSync()
   }
 }
-
-export default localStorage
