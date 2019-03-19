@@ -1,6 +1,11 @@
 import {fgui} from '../../libs/fairygui';
 import { str2ab } from './utils';
+import EventHandler from './EventHandler';
+
 const sharedCanvas = wx.getSharedCanvas()
+
+const eventHandler = new EventHandler(sharedCanvas);
+eventHandler.enable(true);
 
 let {
     pixelRatio,
@@ -10,9 +15,6 @@ let {
 
 PIXI.utils.isWebGLSupported = () => false
 
-// const context = sharedCanvas.getContext('2d');
-// context.fillStyle = 'red';
-// context.fillRect(0,0,100,100);
 
 const app = new PIXI.Application({
     view: sharedCanvas,
@@ -32,27 +34,7 @@ app.renderer.plugins.interaction.mapPositionToPoint = (point, x, y) => {
     point.y = y * pixelRatio
 }
 
-// let container = new PIXI.Container();
-// let bkg = PIXI.Sprite.fromImage('static/bkg.jpg');
-// bkg.on('loaded', () => {
-//     bkg.scale.set(windowWidth/ bkg.width, windowHeight / bkg.height);
-// })
-// container.addChild(bkg);
-
-// app.stage.addChild(container);
 fgui.GRoot.inst.attachTo(app);
-// let HOST_URL = 'http://dev.yunyun-local.com:8003/fui/';
-
-// let loader = new fgui.utils.AssetLoader();
-// loader.add("pixi-rank", HOST_URL + "pixi-rank.fui", { loadType: PIXI.loaders.Resource.LOAD_TYPE.XHR, xhrType: PIXI.loaders.Resource.XHR_RESPONSE_TYPE.BUFFER })
-//             .add("pixi-rank@atlas0", HOST_URL + "pixi-rank@atlas0.png")
-//             .load( () => {
-
-//                 fgui.UIPackage.addPackage('pixi-rank');
-//                 let ins = fgui.UIPackage.createObject('pixi-rank', 'rank');
-//                 fgui.GRoot.inst.addChild(ins);        
-
-//             })
 
 let loader = new fgui.utils.AssetLoader();
 
@@ -90,5 +72,11 @@ wx.onMessage(data => {
     fgui.UIPackage.addPackage('pixi-rank');
     let ins = fgui.UIPackage.createObject('pixi-rank', 'rank');
     fgui.GRoot.inst.addChild(ins);   
+
+    // app.stage.on('pointerdown', () => {
+    //     console.log('>>>>鼠表按下处理');
+    // });
+
+   
 
 });

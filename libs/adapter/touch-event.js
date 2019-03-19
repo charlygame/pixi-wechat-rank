@@ -8,8 +8,11 @@ class TouchEvent {
   target = canvas
   currentTarget = canvas
 
-  constructor(type) {
+  constructor(type, defCanvas = null) {
     this.type = type
+    if (defCanvas) {
+      this.target = this.currentTarget = defCanvas;
+    }
   }
 }
 

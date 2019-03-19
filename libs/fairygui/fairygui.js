@@ -1146,6 +1146,9 @@ export let fgui;
             return this.hasListener(fgui.InteractiveEvents.Click, fn);
         };
         GObject.prototype.on = function (type, listener, thisObject) {
+            console.log('>>>>>Gobject on >>>>>>');
+            console.log(type);
+            console.log(thisObject);
             if (type == null)
                 return this;
             this.$displayObject.on(type, listener, thisObject);
@@ -10055,8 +10058,10 @@ export let fgui;
             _this.$contentWidth = 0;
             _this.$contentHeight = 0;
             _this.setSize(owner.width, owner.height);
+            console.log(_this.$owner);
             _this.$owner.on(fgui.InteractiveEvents.Over, _this.$rollOver, _this);
             _this.$owner.on(fgui.InteractiveEvents.Out, _this.$rollOut, _this);
+            console.log(fgui.InteractiveEvents.Down);
             _this.$owner.on(fgui.InteractiveEvents.Down, _this.$mouseDown, _this);
             _this.$owner.$rootContainer.on("added", _this.$ownerAdded, _this);
             _this.$owner.$rootContainer.on("removed", _this.$ownerRemoved, _this);
@@ -10772,6 +10777,7 @@ export let fgui;
             }
         };
         ScrollPane.prototype.$mouseDown = function (evt) {
+            console.log('>>>>> mouseDown >>>>>');
             if (!this.$touchEffect)
                 return;
             if (this.$tweener != null)

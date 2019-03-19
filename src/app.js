@@ -28,16 +28,18 @@ app.renderer.plugins.interaction.mapPositionToPoint = (point, x, y) => {
     point.x = x * pixelRatio
     point.y = y * pixelRatio
 }
-
+/**
+ * 加载背景图
+ */
 let container = new PIXI.Container();
 let bkg = PIXI.Sprite.fromImage('static/bkg.jpg');
 bkg.scale.set(1.5, 1);
-// bkg.on('loaded', () => {
-// bkg.scale.set(windowWidth/ bkg.width, windowHeight / bkg.height);
-// })
 container.addChild(bkg);
 app.stage.addChild(container);
 
+/**
+ * 准备sharedCanvas纹理
+ */
 let texture = PIXI.Texture.fromLoader(sharedCanvas);
 let openContextSp = new PIXI.Sprite(texture);
 container.addChild(openContextSp);
@@ -50,10 +52,9 @@ function draw() {
 }   
 
 
-
-
-
-
+/**
+ * 小恶魔按钮 
+ */
 
 let btn = PIXI.Sprite.fromImage('static/eggHead.png');
 btn.x = 1136 / 2;
@@ -61,18 +62,15 @@ btn.y = 640 / 2;
 container.addChild(btn);
 btn.interactive = true;
 btn.buttonMode = true;
-btn.on('pointertap', () =>  {
+btn.on('pointertap', (event) =>  {
     console.log('鼠标点击');
-    // showRank();
+    console.log(event);
     requestAnimationFrame(draw); 
-    openContextSp.visible = true;
+    openContextSp.visible = true;    // showRank();
+
 });
 
-
-
-
 // fgui.GRoot.inst.attachTo(app);
-
 /**
  * 加载排行榜资源
  */
@@ -90,7 +88,7 @@ wxLoader.add([
         type: wxLoader.RES_TYPE.IMG
     }
 ]).complete((resources)=>{
-    console.log('>>>>> 资源加载完成 >>>>>');
+    // 
     openDataContext.postMessage({
         ...resources
     });
